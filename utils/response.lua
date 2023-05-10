@@ -1,20 +1,12 @@
-_Response = {}
+local response = {}
+response.__index = response
 
-_Response.headers = {}
-_Response.body = {}
-_Response.status = ""
-
-
-function _Response:add_header(key, value)
-        self.headers[key] = value
+function response:new()
+        local self = setmetatable({}, response)
+        return self
 end
 
-function _Response:add_body(value)
-        table.insert(self.body, value)
-end
+function response:set_input(key, value) self[key] = value end
+function response:get_input(key) return self[key] end
 
-function _Response:set_status(value)
-        self.status = value
-end
-
-return _Response
+return response

@@ -1,8 +1,12 @@
-_Request = {}
+local request = {}
+request.__index = request
 
-_Request.env = ""
-_Request.path = ""
-_Request.uri_data = {}
-_Request.body = ""
+function request:new()
+        local self = setmetatable({}, request)
+        return self
+end
 
-return _Request
+function request:set_input(key, value) self[key] = value end
+function request:get_input(key) return self[key] end
+
+return request

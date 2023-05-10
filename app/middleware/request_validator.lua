@@ -1,4 +1,4 @@
-_Request_validator = {}
+local _Request_validator = {}
 
 local function validate_data_type(content_type, body)
     if content_type == "application/json" and not _Cjson.encode(body) then
@@ -21,7 +21,7 @@ function _Request_validator.validate_request_method(request_method, allowed_meth
 end
 
 function _Request_validator:validate(body)
-    if not validate_data_type(_Request.env.headers["content-type"], body) then
+    if not validate_data_type(_Request:get_input("env").headers["content-type"], body) then
         return
     end
 end
