@@ -14,12 +14,14 @@ local function send_response()
     table.insert(_Response:get_input("headers"), "Content-Type: application/json\n")
     table.insert(_Response:get_input("headers"), "Cache-Control: no-cache\n\n")
 
-    for k, v in pairs(_Response:get_input("headers")) do uhttpd.send(k .. v) end
+    for k, v in pairs(_Response:get_input("headers")) do uhttpd.send(v) end
     _Response:set_input("body",
                             _Cjson.encode({["body_data"] = _Request:get_input("body_data")}) ..
                             "\n" ..
                             _Cjson.encode( {["uri_data"] = _Request:get_input("uri_data")}))
     uhttpd.send(_Response:get_input("body"))
+uhttpd.send(_Cjson.encode(_Request:get_input("env")))
+
 end
 
 -- Main body required by uhhtpd-lua plugin
@@ -29,3 +31,6 @@ function handle_request(env)
     router:direct(_Request:get_input("path"))
     send_response()
 end
+
+
+
