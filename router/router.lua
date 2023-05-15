@@ -1,21 +1,23 @@
 local _Router = {}
 
-local endpoints = {woo_wee = require "app.woo_wee"}
+local function placeholder_middleware()
+end
 
-local routes = {["woo/wee"] = endpoints.woo_wee}
-
-function _Router:direct(route)
-    local request_method = _Request:get_input("env").REQUEST_METHOD
-
-    if not routes[route] then return _Code_handler:send_404() end
-    if not _Request_validator.validate_request_method(request_method, routes[route].allowed_methods) then
-        return _Code_handler:send_405()
+local route = require "app.route"
+local route_validator = require "app.middleware.route_validator"
+local controller = require "app.dummy_controller"
+ --write your endpoints here--
+function _Router.initialize()
+    route.post('wee/woo', controller.store, placeholder_middleware)
+    route.get('wee/woo', controller.index, placeholder_middleware)
+    route.delete('wee/woo', controller.destroy, placeholder_middleware)
+    route.put('wee/woo', controller.update, placeholder_middleware)
+end
+------------------------------
+function _Router.direct(endpoint, request_method)
+    if route_validator.validate_route(endpoint, request_method, route) then
+        return route.get_route(endpoint, request_method)["controller_method"]()
     end
-    if request_method == "GET" then return routes[route].get() end
-    if request_method == "POST" then return routes[route].post() end
-    if request_method == "DELETE" then return routes[route].delete() end
-    if request_method == "PUT" then return routes[route].put() end
-
 end
 
 return _Router
