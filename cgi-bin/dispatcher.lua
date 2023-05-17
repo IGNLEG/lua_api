@@ -6,6 +6,7 @@ _Request_validator = require "app/middleware/request_validator"
 _Request = require "utils.request"
 _Response = require "utils/response"
 _Tbl = require "helper.table_methods"
+_Jwt = require "luajwtjitsi"
 
 local request_parser = require "utils/request_parser"
 local router = require "router/router"
@@ -22,6 +23,7 @@ local function send_response(response_data)
                             "\n" ..
                             _Cjson.encode( {["uri_data"] = _Request:get_input("uri_data")}))
     uhttpd.send(_Response:get_input("body"))
+    if response_data then uhttpd.send("\n" .. response_data) end
     --uhttpd.send(_Cjson.encode(_Request:get_input("env")))
 
 end

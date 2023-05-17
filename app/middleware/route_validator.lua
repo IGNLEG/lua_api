@@ -1,14 +1,14 @@
 local route_validator = {}
 
 local function validate_request_method(endpoint, request_method, route_obj)
-    for _, v in ipairs(route_obj.get_list()) do
+    for _, v in pairs(route_obj.get_list()) do
         if _Tbl.contains(v, endpoint) and _Tbl.contains(v, request_method) then return true end
     end
     return _Code_handler:send_405()
 end
 
 local function route_exists(endpoint, route_obj)
-    for _, v in ipairs(route_obj.get_list()) do
+    for _, v in pairs(route_obj.get_list()) do
         if _Tbl.contains(v, endpoint)then return true end
     end
     return _Code_handler:send_404()

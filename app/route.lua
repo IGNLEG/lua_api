@@ -11,7 +11,7 @@ function route.get_route(endpoint, request_method)
     return false
 end
 
-function route.post(endpoint, controller_method, middleware)
+function route.post(endpoint, controller_method, middleware, type)
     local exists = false
     for _, v in ipairs(route_list) do
         if _Tbl.contains(v, endpoint) and _Tbl.contains(v, 'POST') and
@@ -24,14 +24,15 @@ function route.post(endpoint, controller_method, middleware)
             ["endpoint"] = endpoint,
             ["REQUEST_METHOD"] = 'POST',
             ["controller_method"] = controller_method,
-            ["middleware"] = middleware
+            ["middleware"] = middleware,
+            ["type"] = type
         })
         return true
     end
     return false
 end
 
-function route.get(endpoint, controller_method, middleware)
+function route.get(endpoint, controller_method, middleware, type)
     local exists = false
     for _, v in ipairs(route_list) do
         if _Tbl.contains(v, endpoint) and _Tbl.contains(v, 'GET') and
@@ -42,15 +43,16 @@ function route.get(endpoint, controller_method, middleware)
     if not exists then
         table.insert(route_list, {
             ["endpoint"] = endpoint,
-            ["REQUEST_METHOD"] = 'POST',
+            ["REQUEST_METHOD"] = 'GET',
             ["controller_method"] = controller_method,
-            ["middleware"] = middleware
+            ["middleware"] = middleware,
+            ["type"] = type
         })
         return true
     end
     return false
 end
-function route.delete(endpoint, controller_method, middleware)
+function route.delete(endpoint, controller_method, middleware, type)
     local exists = false
     for _, v in ipairs(route_list) do
         if _Tbl.contains(v, endpoint) and _Tbl.contains(v, 'DELETE') and
@@ -61,15 +63,16 @@ function route.delete(endpoint, controller_method, middleware)
     if not exists then
         table.insert(route_list, {
             ["endpoint"] = endpoint,
-            ["REQUEST_METHOD"] = 'POST',
+            ["REQUEST_METHOD"] = 'DELETE',
             ["controller_method"] = controller_method,
-            ["middleware"] = middleware
+            ["middleware"] = middleware,
+            ["type"] = type
         })
         return true
     end
     return false
 end
-function route.put(endpoint, controller_method, middleware)
+function route.put(endpoint, controller_method, middleware, type)
     local exists = false
     for _, v in ipairs(route_list) do
         if _Tbl.contains(v, endpoint) and _Tbl.contains(v, 'PUT') and
@@ -80,9 +83,10 @@ function route.put(endpoint, controller_method, middleware)
     if not exists then
         table.insert(route_list, {
             ["endpoint"] = endpoint,
-            ["REQUEST_METHOD"] = 'POST',
+            ["REQUEST_METHOD"] = 'PUT',
             ["controller_method"] = controller_method,
-            ["middleware"] = middleware
+            ["middleware"] = middleware,
+            ["type"] = type
         })
         return true
     end
