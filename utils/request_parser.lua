@@ -19,7 +19,9 @@ end
 
 local function parse_form_urlencoded_data(data)
     local parsed_data = {}
-    for k, v in string.gmatch(data, "(%w+)=(%w+)") do -- not secure, data needs to be passed as URL encoded
+    for k, v in string.gmatch(data, "([^&]+)=([^&]+)") do -- not secure, data needs to be passed as URL encoded
+        k = uhttpd.urldecode(k)
+        v = uhttpd.urldecode(v)
         parsed_data[k] = v
     end
     return parsed_data

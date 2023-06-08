@@ -1,6 +1,6 @@
 local auth_controller = {}
 
-local jwt_auth = require "app.middleware.jwt_auth"
+-- local jwt_auth = require "app.middleware.jwt_auth"
 
 function auth_controller.index()
         _Code_handler:send_200()
@@ -9,7 +9,7 @@ end
 
 function auth_controller.store()
         _Code_handler:send_200()
-        return "auth POST (store) reached \n" .. jwt_auth.generate_token()
+        return {token = dofile("www/app/middleware/jwt_auth.lua").generate_token()}
 end
 
 function auth_controller.destroy()
