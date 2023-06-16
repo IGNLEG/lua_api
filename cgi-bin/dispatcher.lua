@@ -1,4 +1,7 @@
 package.path = package.path .. ";/www/?.lua"
+require "utils.global_methods"
+require "utils.funcs"
+require "utils.route_parser"
 
 _Cjson = require("cjson")
 _Code_handler = require "core/code_handler"
@@ -29,7 +32,7 @@ end
 
 -- Main body required by uhhtpd-lua plugin
 function handle_request(env)
-
+    
     router.initialize()
     if(request_parser.parse_request(env)) then
         local response_data = router.direct(_Request:get_input("path") ,_Request:get_input("env").REQUEST_METHOD)

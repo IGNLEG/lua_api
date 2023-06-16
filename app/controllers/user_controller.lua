@@ -3,7 +3,7 @@ local user_controller = {}
 local function check_if_exists()
     local User = dofile("www/app/models/user.lua")
     local user
-    if _Request:get_input("body_data")["id"] then user = User:get():where({id = _Request:get_input("body_data")["id"]}):done()
+    if _Request:get_input("body_data")["users_id"] then user = User:get():where({users_id = _Request:get_input("body_data")["users_id"]}):done()
     else user = User:get():where(_Request:get_input("body_data")):done()
     end
     if user then
@@ -16,7 +16,8 @@ end
 
 function user_controller.index()
     local User = dofile("www/app/models/user.lua")
-    local data = User:get():limit(5):orderBy({desc('id'), asc('name')}):offset(5):where({id_lt = 40}):orderBy({"id"}):done()
+    local data = User:get():done()
+    --local data = User:comments():get():groupBy({"users_id"}):done()
     if data then
         _Code_handler:send_200()
         return data
@@ -64,7 +65,7 @@ function user_controller.update()
         return {message = "User does not exist."} 
     end    
 
-    if User:update(_Request:get_input("body_data")):where({id = _Request:get_input("body_data")["id"]}):done() then
+    if User:update(_Request:get_input("body_data")):where({users_id = _Request:get_input("body_data")["users_id"]}):done() then
         _Code_handler:send_200()
         return {message = "User successfully updated."}
     end
