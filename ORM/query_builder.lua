@@ -39,18 +39,10 @@ local function build_order_by(order_by, order_by_conditions, table_name)
     return query
 end
 
-local function build_join(join, parent_tbl, child_tbls)
-    if not join and not parent_tbl and not child_tbls then return end
-    local prev_table = nil
-        for _, v in pairs(child_tbls) do
-            if prev_table ~= nil and prev_table == parent_tbl .. "_" .. v._tablename  then     
-            query = query .. " JOIN " .. v._tablename .. " ON " .. v._tablename .. ".id" .. " = " .. prev_table .. "." .. v._tablename .. "_id"
-            else
-            query = query .. " JOIN " .. v._tablename .. " ON " .. parent_tbl .. ".id" .. " = " .. v._tablename .. "." .. parent_tbl .. "_id"
-            end
-            prev_table = v._tablename
-        end
-
+local function build_join(join_tbl)
+    for _, v in pairs(join_tbl) do
+        query = query .. " JOIN " .. v.j_table._tablename .. " ON " .. v.l_val .. " = " .. v.r_val
+    end
     return query
 end
 
@@ -85,22 +77,12 @@ local function build_select_cols(select_cols, parent_tbl, child_tbls)
         return query
     end
 
-    local counter = 0
-    local take = 1
-
-    if _Tbl.size(child_tbls) > 1 then
-        take = 2
-    end
-
-    local rightest_table = {} --gramer bestest
     for _, v in pairs(child_tbls) do
-        counter = counter + 1
-        if counter == take then
-            build_json(v._tablename, v.fields, true)
-            rightest_table = v
+        if v.select then
+        build_json(v.j_table._tablename, v.j_table.fields, true)
+        query = query .. " AS " .. v.j_table._tablename
         end
     end
-    query = query .. " AS " .. parent_tbl .. "_" .. rightest_table._tablename
     return query
 end
 
@@ -115,9 +97,8 @@ local function build_select(query_table)
     end
 
     query = query .. " FROM " .. query_table.from_table
-    if query_table.join_tbls then
-        build_join(query_table.join, query_table.from_table,
-                   query_table.join_tbls)
+    if query_table.join then
+        build_join(query_table.join_tbls)
     end
     build_where(query_table.where, query_table.where_conditions,
                 query_table.from_table)

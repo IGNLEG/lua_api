@@ -82,9 +82,9 @@ local function parse_compare(condition, v)
     return where_operator, colname
 end
 
-function ORM_model:join(rtable)
-    self.query_table.join = " LEFT JOIN "
-    table.insert(self.query_table.join_tbls, rtable)
+function ORM_model:join(j_table, l_val, r_val, select)
+    self.query_table.join = " JOIN "
+    table.insert(self.query_table.join_tbls, {["j_table"] = j_table, ["l_val"] = l_val, ["r_val"] = r_val, ["select"] = select})
     return self
 end
 
@@ -207,7 +207,6 @@ function ORM_model:done()
     local query = dofile("www/ORM/query_builder.lua").build_query(self.query_table)
     uhttpd.send("\n\n" .. query)    
     local curs = self.db.conn:execute(query)
-    --curs = self.db.conn:execute("SELECT * FROM comments LIMIT 1")
     return parse_cursor(self, query, curs)
 end
 

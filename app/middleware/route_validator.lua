@@ -19,7 +19,7 @@ end
 function route_validator.validate_route(endpoint, request_method, route_obj)
     if not route_exists(endpoint, route_obj) then
         endpoint = Convert_id_endpoint(endpoint)
-        uhttpd.send("\n\n" .. endpoint)
+        -- uhttpd.send("\n\n" .. endpoint)
         if endpoint and not route_exists(endpoint, route_obj) then return end
         return
     end

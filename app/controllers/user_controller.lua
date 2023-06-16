@@ -16,7 +16,9 @@ end
 
 function user_controller.index()
     local User = dofile("www/app/models/user.lua")
-    local data = User:get():done()
+    local data = User:get():join(dofile("www/app/models/users_comments.lua"), "users.id", "users_comments.users_id", false)
+    :join(dofile("www/app/models/comment.lua"), "comments.id", "users_comments.comments_id", true)
+    :done()
     --local data = User:comments():get():groupBy({"users_id"}):done()
     if data then
         _Code_handler:send_200()
