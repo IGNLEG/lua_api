@@ -5,8 +5,10 @@ local route_list = {}
 function route.get_list() if route_list then return route_list end end
 
 function route.get_route(endpoint, request_method)
+    local temp_endpoint = Convert_id_endpoint(endpoint)
     for _, v in ipairs(route_list) do
         if _Tbl.contains(v, endpoint) and _Tbl.contains(v, request_method) then return v end
+        if temp_endpoint and _Tbl.contains(v, temp_endpoint) and _Tbl.contains(v, request_method) then return v, Parse_data_from_endpoint(temp_endpoint) end
     end
     return false
 end

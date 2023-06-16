@@ -40,17 +40,20 @@ function _Router.direct(endpoint, request_method)
     if not dofile("www/app/middleware/route_validator.lua").validate_route(endpoint, request_method, route) then
         return
     end
-    local req_route = route.get_route(endpoint, request_method)
+    local req_route, table = route.get_route(endpoint, request_method)
     if req_route and req_route["type"] == 'protected' then
         local token_data = jwt_auth.decode_token(_Request:get_input("jwt"))
         if token_data and jwt_auth.check_token_exp(token_data["exp"]) then
+            if table then return req_route["controller_method"](table) end
             return req_route["controller_method"]()
         end
         return _Code_handler:send_401()
     end
     if req_route and req_route["type"] == 'public' then
+        if table then return req_route["controller_method"](table) end
         return req_route["controller_method"]()
     end
+    return false
 end
 
 return _Router

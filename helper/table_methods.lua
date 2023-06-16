@@ -5,4 +5,13 @@ function tbl_methods.contains(table, value)
         return false
     end
 
+function tbl_methods.size(table)
+    local counter = 0
+    for _,_ in pairs(table) do 
+        counter = counter + 1
+    end
+    return counter
+end
+
+
 return tbl_methods
